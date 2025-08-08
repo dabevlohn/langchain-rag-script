@@ -16,24 +16,23 @@ Answer: Based on the context above, let's think step by step."""
 prompt = ChatPromptTemplate.from_template(template)
 
 # model = OllamaLLM(model="llama3.1:8b")
-model = OllamaLLM(model="owl/t-lite:instruct")
+model = OllamaLLM(model="gpt-oss:20b")
+# model = OllamaLLM(model="owl/t-lite:instruct")
 # model = OllamaLLM(model="qwen3:30b")
 # model = OllamaLLM(model="deepseek-r1:32b")
 
 search = SearxSearchWrapper(searx_host="http://127.0.0.1:8080")
 
 results = search.results(
-    "Zen Buddhism",
-    num_results=250,
-    categories="science",
-    language="en"
+    "Langchain Ollama RAG SearXNG",
+    num_results=10,
+    time_range="year",
 )
-# time_range="year",
 
 urls = []
 for result in results:
     ll = result['link']
-    if ll not in urls and ll is not None and "budd" in ll:
+    if ll not in urls and ll is not None:
         urls.append(ll)
 
 print("URLs:")
@@ -66,7 +65,7 @@ if urls:
         chain_type="stuff",
         retriever=retriever
     )
-    response = qa_chain.invoke({"query": "resume the context and write an abstract about 7000 characters long and include a reference to the paper you are writing about"})
+    response = qa_chain.invoke({"query": "write a longread about Langchain, Ollama and SearXNG, use documents from the context"})
     print(response['result'])
 else:
     print("No URLs")
